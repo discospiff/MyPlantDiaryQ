@@ -3,4 +3,7 @@
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
     <string name="zeropointzero">0.0</string>
+    <string name="plantName">Plant Name</string>
+    <string name="description">Description</string>
+    <string name="datePlanted">Date Planted</string>
 </resources>
