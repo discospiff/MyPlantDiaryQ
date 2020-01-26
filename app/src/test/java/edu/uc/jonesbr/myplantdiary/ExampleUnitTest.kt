@@ -1,5 +1,6 @@
 package edu.uc.jonesbr.myplantdiary
 
+import edu.uc.jonesbr.myplantdiary.dto.Plant
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -36,8 +37,9 @@ class ExampleUnitTest {
         assertEquals(8, 4 + 4)
     }
 
+    @Test
     fun confirmEasternRedbud_outputsEasternRedbud () {
-        var plant:Plant = Plant("Cercis", "canadesis", "Eastern Redbud")
+        var plant: Plant = Plant("Cercis", "canadesis", "Eastern Redbud")
         assertEquals("Eastern Redbud", plant.toString());
     }
 
