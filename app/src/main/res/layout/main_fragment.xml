@@ -98,21 +98,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_photo" />
 
         <ImageButton
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_save" />
 
         <ImageButton
             android:id="@+id/btnLogon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/ic_logon" />
     </LinearLayout>
 
     <ImageView
