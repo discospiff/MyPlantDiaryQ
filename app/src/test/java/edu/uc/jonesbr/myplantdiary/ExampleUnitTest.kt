@@ -36,5 +36,10 @@ class ExampleUnitTest {
         assertEquals(8, 4 + 4)
     }
 
+    fun confirmEasternRedbud_outputsEasternRedbud () {
+        var plant:Plant = Plant("Cercis", "canadesis", "Eastern Redbud")
+        assertEquals("Eastern Redbud", plant.toString());
+    }
+
 
 }
