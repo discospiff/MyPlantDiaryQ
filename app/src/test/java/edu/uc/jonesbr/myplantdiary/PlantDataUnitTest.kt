@@ -1,13 +1,18 @@
 package edu.uc.jonesbr.myplantdiary
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import edu.uc.jonesbr.myplantdiary.dto.Plant
+import edu.uc.jonesbr.myplantdiary.service.PlantService
 import edu.uc.jonesbr.myplantdiary.ui.main.MainViewModel
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.rules.TestRule
+
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -20,6 +25,7 @@ class PlantDataUnitTest {
     var rule: TestRule =  InstantTaskExecutorRule()
     lateinit var mvm:MainViewModel
 
+    var plantService = mockk<PlantService>()
 
     @Test
     fun confirmEasternRedbud_outputsEasternRedbud () {
@@ -29,13 +35,30 @@ class PlantDataUnitTest {
 
     @Test
     fun searchForRedbud_returnsRedbud() {
-        givenAFeedOfPlantDataAreAvailable()
+        givenAFeedOfMockedPlantDataAreAvailable()
         whenSearchForRedbud()
         thenResultContainsEasternRedbud()
     }
 
-    private fun givenAFeedOfPlantDataAreAvailable() {
+    private fun givenAFeedOfMockedPlantDataAreAvailable() {
         mvm = MainViewModel()
+        createMockData()
+    }
+
+    private fun createMockData() {
+        var allPlantsLiveData = MutableLiveData<ArrayList<Plant>>()
+        var allPlants = ArrayList<Plant>()
+        // create and add plants to our collection.
+        var redbud = Plant("Cercis", "canadensis", "Eastern Redbud")
+        allPlants.add(redbud)
+        var redOak = Plant("Quercus", "rubra", "Red Oak")
+        allPlants.add(redOak)
+        var whiteOak = Plant("Quercus", "alba", "White Oak")
+        allPlants.add(whiteOak)
+        allPlantsLiveData.postValue(allPlants)
+        every {plantService.fetchPlants(any<String>())} returns allPlantsLiveData
+        mvm.plantService = plantService
+
     }
 
     private fun whenSearchForRedbud() {
@@ -59,7 +82,7 @@ class PlantDataUnitTest {
 
     @Test
     fun searchForGarbage_returnsNothing() {
-        givenAFeedOfPlantDataAreAvailable()
+        givenAFeedOfMockedPlantDataAreAvailable()
         whenISearchForGarbage()
         thenIGetZeroResults()
 
