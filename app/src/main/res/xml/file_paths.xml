@@ -1,0 +1,11 @@
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path
+        name="my_images"
+        path="Android/data/edu.uc.jonesbr.myplantdiary/files/Pictures"/>
+    <external-files-path
+        name="my_debug_images"
+        path="/storage/emulated/0/Android/data/edu.uc.jonesbr.myplantdiary/files/Pictures/"/>
+    <external-files-path
+        name="my_root_images"
+        path="/"/>
+    </paths>
