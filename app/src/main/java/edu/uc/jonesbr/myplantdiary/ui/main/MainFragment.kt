@@ -5,6 +5,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.Environment
@@ -26,6 +27,7 @@ import java.util.*
 
 class MainFragment : Fragment() {
 
+    private val IMAGE_GALLERY_REQUEST_CODE: Int = 2001
     private val SAVE_IMAGE_REQUEST_CODE: Int = 1999
     private val CAMERA_REQUEST_CODE: Int = 1998
     val CAMERA_PERMISSION_REQUEST_CODE = 1997
@@ -53,7 +55,16 @@ class MainFragment : Fragment() {
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
         }
+        btnLogon.setOnClickListener {
+            prepOpenImageGallery()
+        }
+    }
 
+    private fun prepOpenImageGallery() {
+        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+            type = "image/*"
+            startActivityForResult(this, IMAGE_GALLERY_REQUEST_CODE)
+        }
     }
 
     /**
@@ -113,6 +124,14 @@ class MainFragment : Fragment() {
                 imgPlant.setImageBitmap(imageBitmap)
             } else if (requestCode == SAVE_IMAGE_REQUEST_CODE) {
                 Toast.makeText(context, "Image Saved", Toast.LENGTH_LONG).show()
+            } else if (requestCode == IMAGE_GALLERY_REQUEST_CODE) {
+                if (data != null && data.data != null) {
+                    val image = data.data
+                    val source = ImageDecoder.createSource(activity!!.contentResolver, image!!)
+                    val bitmap = ImageDecoder.decodeBitmap(source)
+                    imgPlant.setImageBitmap(bitmap)
+
+                }
             }
         }
     }
