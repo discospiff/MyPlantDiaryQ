@@ -30,7 +30,8 @@ class MainFragment : Fragment() {
     private val IMAGE_GALLERY_REQUEST_CODE: Int = 2001
     private val SAVE_IMAGE_REQUEST_CODE: Int = 1999
     private val CAMERA_REQUEST_CODE: Int = 1998
-    val CAMERA_PERMISSION_REQUEST_CODE = 1997
+    private val CAMERA_PERMISSION_REQUEST_CODE = 1997
+    private val LOCATION_PERMISSION_REQUEST_CODE = 2000
     private lateinit var currentPhotoPath: String
 
     companion object {
@@ -38,6 +39,7 @@ class MainFragment : Fragment() {
     }
 
     private lateinit var viewModel: MainViewModel
+    private lateinit var locationViewModel: LocationViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +60,24 @@ class MainFragment : Fragment() {
         btnLogon.setOnClickListener {
             prepOpenImageGallery()
         }
+        prepRequestLocationUpdates()
+    }
+
+    private fun prepRequestLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            requestLocationUpdates()
+        } else {
+            val permissionRequest = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+            requestPermissions(permissionRequest, LOCATION_PERMISSION_REQUEST_CODE)
+        }
+    }
+
+    private fun requestLocationUpdates() {
+        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
+        locationViewModel.getLocationLiveData().observe(this, Observer {
+            lblLatitudeValue.text = it.latitude
+            lblLongitudeValue.text = it.longitude
+        })
     }
 
     private fun prepOpenImageGallery() {
@@ -93,6 +113,13 @@ class MainFragment : Fragment() {
                     takePhoto()
                 } else {
                     Toast.makeText(context, "Unable to take photo without permission", Toast.LENGTH_LONG).show()
+                }
+            }
+            LOCATION_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==  PackageManager.PERMISSION_GRANTED) {
+                    requestLocationUpdates()
+                } else {
+                    Toast.makeText(context, "Unable to update location without permission", Toast.LENGTH_LONG).show()
                 }
             }
         }
