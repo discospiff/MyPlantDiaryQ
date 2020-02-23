@@ -10,7 +10,7 @@ import retrofit2.Response
 
 class PlantService {
 
-    fun fetchPlants(plantName: String) : MutableLiveData<ArrayList<Plant>> {
+    internal fun fetchPlants(plantName: String) : MutableLiveData<ArrayList<Plant>> {
         var _plants = MutableLiveData<ArrayList<Plant>>()
         val service = RetrofitClientInstance.retrofitInstance?.create(IPlantDAO::class.java)
         val call = service?.getAllPlants()

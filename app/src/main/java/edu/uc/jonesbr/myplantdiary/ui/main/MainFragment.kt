@@ -33,11 +33,6 @@ class MainFragment : Fragment() {
     private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val LOCATION_PERMISSION_REQUEST_CODE = 2000
     private lateinit var currentPhotoPath: String
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
-
     private lateinit var viewModel: MainViewModel
     private lateinit var locationViewModel: LocationViewModel
 
@@ -171,6 +166,10 @@ class MainFragment : Fragment() {
         return File.createTempFile("PlantDiary${timestamp}", ".jpg", storageDir).apply {
             currentPhotoPath = absolutePath
         }
+    }
+
+    companion object {
+        fun newInstance() = MainFragment()
     }
 
 }
