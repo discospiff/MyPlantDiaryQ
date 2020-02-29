@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import edu.uc.jonesbr.myplantdiary.R
+import edu.uc.jonesbr.myplantdiary.dto.Specimen
 import kotlinx.android.synthetic.main.main_fragment.*
 import java.io.File
 import java.text.SimpleDateFormat
@@ -56,6 +57,22 @@ class MainFragment : Fragment() {
             prepOpenImageGallery()
         }
         prepRequestLocationUpdates()
+        btnSave.setOnClickListener {
+            saveSpecimen()
+        }
+
+    }
+
+    private fun saveSpecimen() {
+        var specimen = Specimen().apply {
+            latitude = lblLatitudeValue.text.toString()
+            longitude = lblLongitudeValue.text.toString()
+            plantName = actPlantName.text.toString()
+            description = txtDescription.text.toString()
+            datePlanted = txtDatePlanted.text.toString()
+
+            // TODO save this object.
+        }
     }
 
     private fun prepRequestLocationUpdates() {
