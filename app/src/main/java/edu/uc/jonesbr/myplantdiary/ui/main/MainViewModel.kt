@@ -1,20 +1,40 @@
 package edu.uc.jonesbr.myplantdiary.ui.main
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import edu.uc.jonesbr.myplantdiary.dto.Plant
+import edu.uc.jonesbr.myplantdiary.dto.Specimen
 import edu.uc.jonesbr.myplantdiary.service.PlantService
 
 class MainViewModel : ViewModel() {
     private var _plants: MutableLiveData<ArrayList<Plant>> = MutableLiveData<ArrayList<Plant>>()
-    var plantService: PlantService = PlantService()
+    private var plantService: PlantService = PlantService()
+    private lateinit var firestore : FirebaseFirestore
 
     init {
        fetchPlants("e")
+        firestore = FirebaseFirestore.getInstance()
+        firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
+
     }
 
     fun fetchPlants(plantName: String) {
         _plants = plantService.fetchPlants(plantName)
+    }
+
+    fun save(specimen: Specimen) {
+        firestore.collection("specimens")
+            .document("specimen1")
+            .set(specimen)
+            .addOnSuccessListener {
+                Log.d("Firebase", "document saved")
+            }
+            .addOnFailureListener {
+                Log.d("Firebase", "Save Failed")
+            }
     }
 
     internal var plants:MutableLiveData<ArrayList<Plant>>

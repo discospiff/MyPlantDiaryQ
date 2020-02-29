@@ -70,9 +70,8 @@ class MainFragment : Fragment() {
             plantName = actPlantName.text.toString()
             description = txtDescription.text.toString()
             datePlanted = txtDatePlanted.text.toString()
-
-            // TODO save this object.
         }
+        viewModel.save(specimen)
     }
 
     private fun prepRequestLocationUpdates() {
