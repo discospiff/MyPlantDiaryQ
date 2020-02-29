@@ -26,13 +26,13 @@ class MainViewModel : ViewModel() {
     }
 
     fun save(specimen: Specimen) {
-        firestore.collection("specimens")
-            .document("specimen1")
-            .set(specimen)
-            .addOnSuccessListener {
+        val document = firestore.collection("specimens").document()
+        specimen.specimenId = document.id
+        val set = document.set(specimen)
+            set.addOnSuccessListener {
                 Log.d("Firebase", "document saved")
             }
-            .addOnFailureListener {
+            set.addOnFailureListener {
                 Log.d("Firebase", "Save Failed")
             }
     }
