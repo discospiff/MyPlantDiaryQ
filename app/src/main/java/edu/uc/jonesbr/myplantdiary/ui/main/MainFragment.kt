@@ -50,6 +50,9 @@ class MainFragment : Fragment() {
         viewModel.plants.observe(this, Observer {
             plants -> actPlantName.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, plants))
         })
+        viewModel.specimens.observe(this, Observer {
+            specimens -> spnSpecimens.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, specimens))
+        })
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
         }
