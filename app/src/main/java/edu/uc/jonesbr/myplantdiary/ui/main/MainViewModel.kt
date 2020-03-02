@@ -41,8 +41,10 @@ class MainViewModel : ViewModel() {
                 val allSpecimens = ArrayList<Specimen>()
                 val documents = snapshot.documents
                 documents.forEach {
+
                     val specimen = it.toObject(Specimen::class.java)
                     if (specimen != null) {
+                        specimen.specimenId = it.id
                         allSpecimens.add(specimen!!)
                     }
                 }
