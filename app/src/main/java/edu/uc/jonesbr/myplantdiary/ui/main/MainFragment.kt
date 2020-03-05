@@ -19,7 +19,11 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import edu.uc.jonesbr.myplantdiary.R
+import edu.uc.jonesbr.myplantdiary.dto.Plant
 import edu.uc.jonesbr.myplantdiary.dto.Specimen
 import kotlinx.android.synthetic.main.main_fragment.*
 import java.io.File
@@ -33,9 +37,12 @@ class MainFragment : Fragment() {
     private val CAMERA_REQUEST_CODE: Int = 1998
     private val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private val LOCATION_PERMISSION_REQUEST_CODE = 2000
+    private val AUTH_REQUEST_CODE = 2002
     private lateinit var currentPhotoPath: String
     private lateinit var viewModel: MainViewModel
     private lateinit var locationViewModel: LocationViewModel
+    private var _plantId = 0
+    private var user : FirebaseUser? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,17 +60,30 @@ class MainFragment : Fragment() {
         viewModel.specimens.observe(this, Observer {
             specimens -> spnSpecimens.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, specimens))
         })
+        actPlantName.setOnItemClickListener { parent, view, position, id ->
+            var selectedPlant = parent.getItemAtPosition(position) as Plant
+            _plantId = selectedPlant.plantId
+        }
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
         }
         btnLogon.setOnClickListener {
-            prepOpenImageGallery()
+            logon()
         }
         prepRequestLocationUpdates()
         btnSave.setOnClickListener {
             saveSpecimen()
         }
 
+    }
+
+    private fun logon() {
+        var providers = arrayListOf(
+           AuthUI.IdpConfig.EmailBuilder().build()
+        )
+        startActivityForResult(
+            AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build(), AUTH_REQUEST_CODE
+        )
     }
 
     private fun saveSpecimen() {
@@ -73,6 +93,7 @@ class MainFragment : Fragment() {
             plantName = actPlantName.text.toString()
             description = txtDescription.text.toString()
             datePlanted = txtDatePlanted.text.toString()
+            plantId = _plantId
         }
         viewModel.save(specimen)
     }
@@ -173,6 +194,8 @@ class MainFragment : Fragment() {
                     imgPlant.setImageBitmap(bitmap)
 
                 }
+            } else if (requestCode == AUTH_REQUEST_CODE) {
+                user = FirebaseAuth.getInstance().currentUser
             }
         }
     }
