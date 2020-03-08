@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import edu.uc.jonesbr.myplantdiary.dto.Photo
 import edu.uc.jonesbr.myplantdiary.dto.Plant
 import edu.uc.jonesbr.myplantdiary.dto.Specimen
 import edu.uc.jonesbr.myplantdiary.service.PlantService
@@ -57,15 +58,34 @@ class MainViewModel : ViewModel() {
         _plants = plantService.fetchPlants(plantName)
     }
 
-    fun save(specimen: Specimen) {
+    fun save(
+        specimen: Specimen,
+        photos: java.util.ArrayList<Photo>
+    ) {
         val document = firestore.collection("specimens").document()
         specimen.specimenId = document.id
         val set = document.set(specimen)
             set.addOnSuccessListener {
                 Log.d("Firebase", "document saved")
+                if (photos != null && photos.size > 0) {
+                    savePhotos(specimen, photos)
+                }
+
             }
             set.addOnFailureListener {
                 Log.d("Firebase", "Save Failed")
+            }
+    }
+
+    private fun savePhotos(specimen: Specimen, photos: java.util.ArrayList<Photo>) {
+        val collection = firestore.collection("specimens")
+            .document(specimen.specimenId)
+            .collection("photos")
+            photos.forEach {
+                photo -> val task = collection.add(photo)
+                task.addOnSuccessListener {
+                    photo.id = it.id
+                }
             }
     }
 
