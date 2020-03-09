@@ -92,6 +92,11 @@ class MainFragment : Fragment() {
     }
 
     private fun saveSpecimen() {
+        if (user == null) {
+            logon()
+        }
+        user ?: return
+
         var specimen = Specimen().apply {
             latitude = lblLatitudeValue.text.toString()
             longitude = lblLongitudeValue.text.toString()
@@ -100,7 +105,7 @@ class MainFragment : Fragment() {
             datePlanted = txtDatePlanted.text.toString()
             plantId = _plantId
         }
-        viewModel.save(specimen, photos)
+        viewModel.save(specimen, photos, user!!)
 
         specimen = Specimen()
         photos = ArrayList<Photo>()
