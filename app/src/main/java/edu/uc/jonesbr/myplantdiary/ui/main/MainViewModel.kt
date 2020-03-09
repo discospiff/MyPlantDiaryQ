@@ -1,11 +1,15 @@
 package edu.uc.jonesbr.myplantdiary.ui.main
 
 import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.storage.FirebaseStorage
+import edu.uc.jonesbr.myplantdiary.dto.Photo
 import edu.uc.jonesbr.myplantdiary.dto.Plant
 import edu.uc.jonesbr.myplantdiary.dto.Specimen
 import edu.uc.jonesbr.myplantdiary.service.PlantService
@@ -15,6 +19,7 @@ class MainViewModel : ViewModel() {
     private var plantService: PlantService = PlantService()
     private lateinit var firestore : FirebaseFirestore
     private var _specimens: MutableLiveData<ArrayList<Specimen>> = MutableLiveData<ArrayList<Specimen>>()
+    private var storageReferenence = FirebaseStorage.getInstance().getReference()
 
 
     init {
@@ -57,16 +62,70 @@ class MainViewModel : ViewModel() {
         _plants = plantService.fetchPlants(plantName)
     }
 
-    fun save(specimen: Specimen) {
+    fun save(
+        specimen: Specimen,
+        photos: java.util.ArrayList<Photo>,
+        user: FirebaseUser
+    ) {
         val document = firestore.collection("specimens").document()
         specimen.specimenId = document.id
         val set = document.set(specimen)
             set.addOnSuccessListener {
                 Log.d("Firebase", "document saved")
+                if (photos != null && photos.size > 0) {
+                    savePhotos(specimen, photos, user)
+                }
+
             }
             set.addOnFailureListener {
                 Log.d("Firebase", "Save Failed")
             }
+    }
+
+    private fun savePhotos(
+        specimen: Specimen,
+        photos: java.util.ArrayList<Photo>,
+        user: FirebaseUser
+    ) {
+        val collection = firestore.collection("specimens")
+            .document(specimen.specimenId)
+            .collection("photos")
+            photos.forEach {
+                photo -> val task = collection.add(photo)
+                task.addOnSuccessListener {
+                    photo.id = it.id
+                    uploadPhotos(specimen, photos, user)
+                }
+            }
+    }
+
+    private fun uploadPhotos(specimen: Specimen, photos: ArrayList<Photo>, user: FirebaseUser) {
+        photos.forEach {
+            photo ->
+            var uri = Uri.parse(photo.localUri)
+            val imageRef = storageReferenence.child("images/" + user.uid + "/" + uri.lastPathSegment)
+            val uploadTask = imageRef.putFile(uri)
+            uploadTask.addOnSuccessListener {
+                val downloadUrl = imageRef.downloadUrl
+                downloadUrl.addOnSuccessListener {
+                    photo.remoteUri = it.toString()
+                    // update our Cloud Firestore with the public image URI.
+                    updatePhotoDatabase(specimen, photo)
+                }
+
+            }
+            uploadTask.addOnFailureListener {
+                Log.e(TAG, it.message)
+            }
+        }
+    }
+
+    private fun updatePhotoDatabase(specimen: Specimen, photo: Photo) {
+        firestore.collection("specimens")
+            .document(specimen.specimenId)
+            .collection("photos")
+            .document(photo.id)
+            .set(photo)
     }
 
     internal var plants:MutableLiveData<ArrayList<Plant>>

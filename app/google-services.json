@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "164407865727-mbil97ci5lgoidm77h8n9kt60on3g9q7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.uc.jonesbr.myplantdiary",
+            "certificate_hash": "eeae9a7eaf070c5cfe72cd49057710551c99ac2c"
+          }
+        },
+        {
           "client_id": "164407865727-0qink45u2p476829rb26ebi0oaeribce.apps.googleusercontent.com",
           "client_type": 3
         }
