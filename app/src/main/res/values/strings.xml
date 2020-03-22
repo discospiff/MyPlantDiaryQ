@@ -6,4 +6,11 @@
     <string name="plantName">Plant Name</string>
     <string name="description">Description</string>
     <string name="datePlanted">Date Planted</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="eventType">Event Type</string>
+    <string name="quantity">Quantity</string>
+    <string name="units">Units (Gallons, Cups, etc.)</string>
+    <string name="eventDate">Event Date</string>
 </resources>

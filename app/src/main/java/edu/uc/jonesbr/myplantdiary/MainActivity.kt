@@ -6,6 +6,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.widget.Toast
 import androidx.core.view.GestureDetectorCompat
+import edu.uc.jonesbr.myplantdiary.ui.main.EventFragment
 import edu.uc.jonesbr.myplantdiary.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -90,7 +91,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onSwipeRight() {
-        Toast.makeText(this, "Right Swipe", Toast.LENGTH_LONG).show()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, EventFragment.newInstance())
+            .commitNow()
     }
 
 }
