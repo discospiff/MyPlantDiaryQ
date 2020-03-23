@@ -20,6 +20,7 @@ class MainViewModel : ViewModel() {
     private lateinit var firestore : FirebaseFirestore
     private var _specimens: MutableLiveData<ArrayList<Specimen>> = MutableLiveData<ArrayList<Specimen>>()
     private var storageReferenence = FirebaseStorage.getInstance().getReference()
+    private var _specimen = Specimen()
 
 
     init {
@@ -135,4 +136,8 @@ class MainViewModel : ViewModel() {
     internal var specimens:MutableLiveData<ArrayList<Specimen>>
         get() { return _specimens}
         set(value) {_specimens = value}
+
+    internal var specimen: Specimen
+        get() {return _specimen}
+        set(value) {_specimen = value}
 }
