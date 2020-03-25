@@ -16,10 +16,11 @@ import edu.uc.jonesbr.myplantdiary.service.PlantService
 
 class MainViewModel : ViewModel() {
     private var _plants: MutableLiveData<ArrayList<Plant>> = MutableLiveData<ArrayList<Plant>>()
-    private var plantService: PlantService = PlantService()
+    private var _plantService: PlantService = PlantService()
     private lateinit var firestore : FirebaseFirestore
     private var _specimens: MutableLiveData<ArrayList<Specimen>> = MutableLiveData<ArrayList<Specimen>>()
     private var storageReferenence = FirebaseStorage.getInstance().getReference()
+    private var _specimen = Specimen()
 
 
     init {
@@ -59,7 +60,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun fetchPlants(plantName: String) {
-        _plants = plantService.fetchPlants(plantName)
+        _plants = _plantService.fetchPlants(plantName)
     }
 
     fun save(
@@ -135,4 +136,12 @@ class MainViewModel : ViewModel() {
     internal var specimens:MutableLiveData<ArrayList<Specimen>>
         get() { return _specimens}
         set(value) {_specimens = value}
+
+    internal var specimen: Specimen
+        get() {return _specimen}
+        set(value) {_specimen = value}
+
+    internal var plantServce : PlantService
+        get() { return _plantService }
+        set(value) {_plantService = value}
 }
