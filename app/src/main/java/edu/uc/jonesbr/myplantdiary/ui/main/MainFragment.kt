@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -80,6 +81,49 @@ class MainFragment : DiaryFragment() {
         }
         btnForward.setOnClickListener {
             (activity as MainActivity).onLeftSwipe()
+        }
+        spnSpecimens.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            /**
+             * Callback method to be invoked when the selection disappears from this
+             * view. The selection can disappear for instance when touch is activated
+             * or when the adapter becomes empty.
+             *
+             * @param parent The AdapterView that now contains no selected item.
+             */
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            /**
+             *
+             * Callback method to be invoked when an item in this view has been
+             * selected. This callback is invoked only when the newly selected
+             * position is different from the previously selected position or if
+             * there was no selected item.
+             *
+             * Implementers can call getItemAtPosition(position) if they need to access the
+             * data associated with the selected item.
+             *
+             * @param parent The AdapterView where the selection happened
+             * @param view The view within the AdapterView that was clicked
+             * @param position The position of the view in the adapter
+             * @param id The row id of the item that is selected
+             */
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                specimen = parent?.getItemAtPosition(position) as Specimen
+                // use this specimen object to populate our UI fields
+                actPlantName.setText(specimen.plantName)
+                txtDescription.setText(specimen.description)
+                txtDatePlanted.setText(specimen.datePlanted)
+                viewModel.specimen = specimen
+
+            }
+
         }
 
     }

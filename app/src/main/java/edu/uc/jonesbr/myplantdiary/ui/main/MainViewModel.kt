@@ -68,7 +68,14 @@ class MainViewModel : ViewModel() {
         photos: java.util.ArrayList<Photo>,
         user: FirebaseUser
     ) {
-        val document = firestore.collection("specimens").document()
+        val document =
+            if (specimen.specimenId != null && !specimen.specimenId.isEmpty()) {
+                // updating existing
+                firestore.collection("specimens").document(specimen.specimenId)
+            } else {
+                // create new
+                firestore.collection("specimens").document()
+            }
         specimen.specimenId = document.id
         val set = document.set(specimen)
             set.addOnSuccessListener {
