@@ -11,7 +11,7 @@ import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Event
 import kotlinx.android.synthetic.main.event_fragment.*
 
-class EventFragment : Fragment() {
+class EventFragment : DiaryFragment() {
 
     companion object {
         fun newInstance() = EventFragment()
