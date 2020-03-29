@@ -34,6 +34,9 @@ class EventFragment : DiaryFragment() {
         btnSaveEvent.setOnClickListener {
             saveEvent()
         }
+        btnTakeEventPhoto.setOnClickListener {
+            prepTakePhoto()
+        }
     }
 
     private fun saveEvent() {
@@ -47,9 +50,22 @@ class EventFragment : DiaryFragment() {
             }
             units = actUnits.text.toString()
             date = edtEventDate.text.toString()
+            if (photoURI != null) {
+                event.localPhotoUri = photoURI.toString()
+            }
         }
         viewModel.specimen.events.add(event)
+        clearAll()
 
+    }
+
+    private fun clearAll() {
+        edtEventDate.setText("")
+        actEventType.setText("")
+        edtQuanity.setText("")
+        actUnits.setText("")
+        edtDescription.setText("")
+        photoURI = null
     }
 
 }
