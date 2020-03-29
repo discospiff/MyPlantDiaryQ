@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 
 import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Event
@@ -37,6 +39,12 @@ class EventFragment : DiaryFragment() {
         btnTakeEventPhoto.setOnClickListener {
             prepTakePhoto()
         }
+        // wire up our recycler view.
+        rcyEvents.hasFixedSize()
+        rcyEvents.layoutManager = LinearLayoutManager(context)
+        rcyEvents.itemAnimator = DefaultItemAnimator()
+        rcyEvents.adapter = EventsAdapter(viewModel.specimen.events, R.layout.rowlayout)
+
     }
 
     private fun saveEvent() {
@@ -56,7 +64,7 @@ class EventFragment : DiaryFragment() {
         }
         viewModel.specimen.events.add(event)
         clearAll()
-
+        rcyEvents.adapter?.notifyDataSetChanged()
     }
 
     private fun clearAll() {
