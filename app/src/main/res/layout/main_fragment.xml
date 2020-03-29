@@ -51,8 +51,9 @@
         android:id="@+id/spnSpecimens"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/lblLongitudeValue"
-        tools:layout_editor_absoluteX="1dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblLongitudeValue" />
 
     <AutoCompleteTextView
         android:id="@+id/actPlantName"
@@ -113,6 +114,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/ic_logon" />
+
+        <ImageButton
+            android:id="@+id/btnForward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_forward_arrow" />
     </LinearLayout>
 
     <ImageView

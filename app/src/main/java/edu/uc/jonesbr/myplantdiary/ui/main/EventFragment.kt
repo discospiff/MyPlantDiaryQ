@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import edu.uc.jonesbr.myplantdiary.MainActivity
 
 import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Event
@@ -38,6 +39,9 @@ class EventFragment : DiaryFragment() {
         }
         btnTakeEventPhoto.setOnClickListener {
             prepTakePhoto()
+        }
+        btnBackToSpecimen.setOnClickListener {
+            (activity as MainActivity).onSwipeRight()
         }
         // wire up our recycler view.
         rcyEvents.hasFixedSize()

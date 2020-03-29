@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import edu.uc.jonesbr.myplantdiary.MainActivity
 import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Photo
 import edu.uc.jonesbr.myplantdiary.dto.Plant
@@ -77,6 +78,9 @@ class MainFragment : DiaryFragment() {
         btnSave.setOnClickListener {
             saveSpecimen()
         }
+        btnForward.setOnClickListener {
+            (activity as MainActivity).onLeftSwipe()
+        }
 
     }
 
@@ -93,7 +97,7 @@ class MainFragment : DiaryFragment() {
     /**
      * Persist our specimen to long term storage.
      */
-    private fun saveSpecimen() {
+    internal fun saveSpecimen() {
         if (user == null) {
             logon()
         }
