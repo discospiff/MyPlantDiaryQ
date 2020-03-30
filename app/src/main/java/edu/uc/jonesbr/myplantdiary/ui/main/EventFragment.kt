@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import edu.uc.jonesbr.myplantdiary.MainActivity
 
 import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Event
 import kotlinx.android.synthetic.main.event_fragment.*
 
-class EventFragment : Fragment() {
+class EventFragment : DiaryFragment() {
 
     companion object {
         fun newInstance() = EventFragment()
@@ -34,6 +37,18 @@ class EventFragment : Fragment() {
         btnSaveEvent.setOnClickListener {
             saveEvent()
         }
+        btnTakeEventPhoto.setOnClickListener {
+            prepTakePhoto()
+        }
+        btnBackToSpecimen.setOnClickListener {
+            (activity as MainActivity).onSwipeRight()
+        }
+        // wire up our recycler view.
+        rcyEvents.hasFixedSize()
+        rcyEvents.layoutManager = LinearLayoutManager(context)
+        rcyEvents.itemAnimator = DefaultItemAnimator()
+        rcyEvents.adapter = EventsAdapter(viewModel.specimen.events, R.layout.rowlayout)
+
     }
 
     private fun saveEvent() {
@@ -47,9 +62,23 @@ class EventFragment : Fragment() {
             }
             units = actUnits.text.toString()
             date = edtEventDate.text.toString()
+            if (photoURI != null) {
+                event.localPhotoUri = photoURI.toString()
+            }
         }
         viewModel.specimen.events.add(event)
+        viewModel.save(event)
+        clearAll()
+        rcyEvents.adapter?.notifyDataSetChanged()
+    }
 
+    private fun clearAll() {
+        edtEventDate.setText("")
+        actEventType.setText("")
+        edtQuanity.setText("")
+        actUnits.setText("")
+        edtDescription.setText("")
+        photoURI = null
     }
 
 }
