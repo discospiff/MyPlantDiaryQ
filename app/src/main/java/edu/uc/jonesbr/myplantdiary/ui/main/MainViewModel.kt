@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.storage.FirebaseStorage
+import edu.uc.jonesbr.myplantdiary.dto.Event
 import edu.uc.jonesbr.myplantdiary.dto.Photo
 import edu.uc.jonesbr.myplantdiary.dto.Plant
 import edu.uc.jonesbr.myplantdiary.dto.Specimen
@@ -21,6 +22,7 @@ class MainViewModel : ViewModel() {
     private var _specimens: MutableLiveData<ArrayList<Specimen>> = MutableLiveData<ArrayList<Specimen>>()
     private var storageReferenence = FirebaseStorage.getInstance().getReference()
     private var _specimen = Specimen()
+    private var _events = MutableLiveData<List<Event>>()
 
 
     init {
@@ -90,6 +92,29 @@ class MainViewModel : ViewModel() {
             }
     }
 
+    internal fun save(event: Event) {
+        val collection = firestore.collection("specimens").document(specimen.specimenId).collection("events")
+        val task = collection.add(event)
+        task.addOnSuccessListener {
+            event.id = it.id
+        }
+        task.addOnFailureListener {
+            var message = it.message
+            var i = 1 + 1
+        }
+
+    }
+
+    internal fun fetchEvents() {
+        var eventsCollection = firestore.collection("specimens")
+            .document(specimen.specimenId)
+            .collection("events")
+        eventsCollection.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            var innerEvents = querySnapshot?.toObjects(Event::class.java)
+            _events.postValue(innerEvents)
+        }
+    }
+
     private fun savePhotos(
         specimen: Specimen,
         photos: java.util.ArrayList<Photo>,
@@ -151,4 +176,8 @@ class MainViewModel : ViewModel() {
     internal var plantServce : PlantService
         get() { return _plantService }
         set(value) {_plantService = value}
+
+    internal var events : MutableLiveData<List<Event>>
+        get() { return _events}
+        set(value) {_events = value}
 }

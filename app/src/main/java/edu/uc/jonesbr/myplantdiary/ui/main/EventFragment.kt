@@ -67,6 +67,7 @@ class EventFragment : DiaryFragment() {
             }
         }
         viewModel.specimen.events.add(event)
+        viewModel.save(event)
         clearAll()
         rcyEvents.adapter?.notifyDataSetChanged()
     }
