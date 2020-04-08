@@ -53,11 +53,13 @@ class MainFragment : DiaryFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        applicationViewModel = ViewModelProviders.of(this).get(ApplicationViewModel::class.java)
+
         activity.let {
             viewModel = ViewModelProviders.of(it!!).get(MainViewModel::class.java)
         }
 
-        viewModel.plants.observe(this, Observer {
+        applicationViewModel.plantService.getLocalPlantDAO().getAllPlants().observe(this, Observer {
             plants -> actPlantName.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, plants))
         })
         viewModel.specimens.observe(this, Observer {
@@ -189,7 +191,7 @@ class MainFragment : DiaryFragment() {
     }
 
     private fun requestLocationUpdates() {
-        applicationViewModel = ViewModelProviders.of(this).get(ApplicationViewModel::class.java)
+
         applicationViewModel.getLocationLiveData().observe(this, Observer {
             lblLatitudeValue.text = it.latitude
             lblLongitudeValue.text = it.longitude

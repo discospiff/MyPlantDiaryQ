@@ -19,7 +19,6 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     private var _plants: MutableLiveData<ArrayList<Plant>> = MutableLiveData<ArrayList<Plant>>()
-    private var _plantService: PlantService = PlantService()
     private lateinit var firestore : FirebaseFirestore
     private var _specimens: MutableLiveData<ArrayList<Specimen>> = MutableLiveData<ArrayList<Specimen>>()
     private var storageReferenence = FirebaseStorage.getInstance().getReference()
@@ -28,7 +27,6 @@ class MainViewModel : ViewModel() {
 
 
     init {
-        fetchPlants("e")
         firestore = FirebaseFirestore.getInstance()
         firestore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
         listenToSpecimens()
@@ -60,12 +58,6 @@ class MainViewModel : ViewModel() {
                 }
                 _specimens.value = allSpecimens
             }
-        }
-    }
-
-    fun fetchPlants(plantName: String) {
-        viewModelScope.launch{
-            _plantService.fetchPlants(plantName)
         }
     }
 
@@ -176,10 +168,6 @@ class MainViewModel : ViewModel() {
     internal var specimen: Specimen
         get() {return _specimen}
         set(value) {_specimen = value}
-
-    internal var plantServce : PlantService
-        get() { return _plantService }
-        set(value) {_plantService = value}
 
     internal var events : MutableLiveData<List<Event>>
         get() { return _events}
