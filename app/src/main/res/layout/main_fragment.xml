@@ -95,6 +95,13 @@
         tools:layout_editor_absoluteX="1dp">
 
         <ImageButton
+            android:id="@+id/btnMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/ic_map" />
+
+        <ImageButton
             android:id="@+id/btnTakePhoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
