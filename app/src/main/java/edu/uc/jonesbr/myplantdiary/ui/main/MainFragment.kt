@@ -71,8 +71,7 @@ class MainFragment : DiaryFragment() {
             _plantId = selectedPlant.plantId
         }
         btnMap.setOnClickListener {
-            val intent = Intent(context, MapsActivity::class.java)
-            startActivity(intent)
+            (activity as MainActivity).onOpenMap()
         }
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()
