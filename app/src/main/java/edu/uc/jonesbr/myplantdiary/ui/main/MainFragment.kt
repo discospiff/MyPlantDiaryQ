@@ -23,6 +23,7 @@ import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import edu.uc.jonesbr.myplantdiary.MainActivity
+import edu.uc.jonesbr.myplantdiary.MapsActivity
 import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Event
 import edu.uc.jonesbr.myplantdiary.dto.Photo
@@ -68,6 +69,9 @@ class MainFragment : DiaryFragment() {
         actPlantName.setOnItemClickListener { parent, view, position, id ->
             var selectedPlant = parent.getItemAtPosition(position) as Plant
             _plantId = selectedPlant.plantId
+        }
+        btnMap.setOnClickListener {
+            (activity as MainActivity).onOpenMap()
         }
         btnTakePhoto.setOnClickListener {
             prepTakePhoto()

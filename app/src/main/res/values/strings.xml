@@ -13,4 +13,5 @@
     <string name="quantity">Quantity</string>
     <string name="units">Units (Gallons, Cups, etc.)</string>
     <string name="eventDate">Event Date</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
