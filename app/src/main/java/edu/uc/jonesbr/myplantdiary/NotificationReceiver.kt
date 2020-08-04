@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
@@ -107,7 +108,11 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     private fun createChannel() {
-        channel = NotificationChannel(EVENT_CHANNEL_ID, "Plant Events", NotificationManager.IMPORTANCE_DEFAULT)
+        channel = NotificationChannel(
+            EVENT_CHANNEL_ID,
+            "Plant Events",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
         channel.description = "A channel for plant events"
         channel.lightColor = Color.GREEN
         val notificationManager = getSystemService(context!!, NotificationManager::class.java)
