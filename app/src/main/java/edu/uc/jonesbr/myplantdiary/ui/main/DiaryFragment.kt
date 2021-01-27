@@ -6,18 +6,21 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Event
@@ -32,6 +35,15 @@ open class DiaryFragment : Fragment() {
     protected val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private lateinit var currentPhotoPath: String
     protected var photoURI : Uri? = null
+    internal lateinit var viewModel: MainViewModel
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        activity.let {
+            viewModel = ViewModelProviders.of(it!!).get(MainViewModel::class.java)
+        }
+    }
+
     /**
      * See if we have permission or not.
      */
@@ -163,12 +175,16 @@ open class DiaryFragment : Fragment() {
     inner class EventViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         private var imgEventThumbnail : ImageView = itemView.findViewById(R.id.imgEventThumbnail)
         private var lblEventInfo: TextView = itemView.findViewById(R.id.lblEventInfo)
+        private var btnDeleteEvent: ImageButton = itemView.findViewById(R.id.btnDeleteEvent)
 
         /**
          * This function will get called once for each item in the collection that we want to show in our recylcer view
          * Paint a single row of the recycler view with this event data class.
          */
         fun updateEvent (event : Event) {
+            btnDeleteEvent.setOnClickListener {
+                deleteEvent(event)
+            }
             lblEventInfo.text = event.toString()
             if (event.localPhotoUri != null && event.localPhotoUri != "null") {
                 try {
@@ -184,6 +200,10 @@ open class DiaryFragment : Fragment() {
             }
         }
      }
+
+    private fun deleteEvent(event: Event) {
+        viewModel.delete(event)
+    }
 
 
 }

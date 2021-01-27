@@ -31,7 +31,6 @@ class DiaryMapFragment : DiaryFragment() {
 
     private lateinit var mMap : GoogleMap
     private var mapReady = false
-    private lateinit var viewModel: MainViewModel
     private lateinit var specimens: List<Specimen>
 
     override fun onCreateView(
@@ -51,10 +50,6 @@ class DiaryMapFragment : DiaryFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.let {
-            viewModel = ViewModelProviders.of(it!!).get(MainViewModel::class.java)
-
-        }
 
         viewModel.specimens.observe(this, Observer {
             specimens -> this.specimens = specimens

@@ -101,6 +101,19 @@ class MainViewModel : ViewModel() {
 
     }
 
+    internal fun delete(event: Event) {
+        if (event.id != null) {
+             val document = firestore.collection("specimens").document(specimen.specimenId).collection("events").document(event.id)
+            val task = document.delete();
+            task.addOnSuccessListener {
+                Log.e(TAG, "Event ${event.id} Deleted")
+            }
+            task.addOnFailureListener {
+                Log.e(TAG, "Event ${event.id} Failed to delete.  Message: ${it.message}")
+            }
+        }
+    }
+
     internal fun fetchEvents() {
         var eventsCollection = firestore.collection("specimens")
             .document(specimen.specimenId)

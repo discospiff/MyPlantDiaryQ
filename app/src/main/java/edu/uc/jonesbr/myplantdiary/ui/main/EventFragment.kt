@@ -20,7 +20,7 @@ class EventFragment : DiaryFragment() {
         fun newInstance() = EventFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,9 +31,6 @@ class EventFragment : DiaryFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.let {
-            viewModel = ViewModelProviders.of(it!!).get(MainViewModel::class.java)
-        }
         btnSaveEvent.setOnClickListener {
             saveEvent()
         }

@@ -37,7 +37,6 @@ class MainFragment : DiaryFragment() {
     private val IMAGE_GALLERY_REQUEST_CODE: Int = 2001
     private val LOCATION_PERMISSION_REQUEST_CODE = 2000
     private val AUTH_REQUEST_CODE = 2002
-    private lateinit var viewModel: MainViewModel
     private lateinit var applicationViewModel: ApplicationViewModel
     private var _plantId = 0
     private var user : FirebaseUser? = null
@@ -55,10 +54,6 @@ class MainFragment : DiaryFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         applicationViewModel = ViewModelProviders.of(this).get(ApplicationViewModel::class.java)
-
-        activity.let {
-            viewModel = ViewModelProviders.of(it!!).get(MainViewModel::class.java)
-        }
 
         applicationViewModel.plantService.getLocalPlantDAO().getAllPlants().observe(this, Observer {
             plants -> actPlantName.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, plants))
