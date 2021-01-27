@@ -74,7 +74,7 @@ class MainFragment : DiaryFragment() {
             (activity as MainActivity).onOpenMap()
         }
         btnTakePhoto.setOnClickListener {
-            prepTakePhoto()
+            takePhoto()
         }
         btnLogon.setOnClickListener {
             logon()
