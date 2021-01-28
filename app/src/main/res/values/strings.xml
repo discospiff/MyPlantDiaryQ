@@ -14,4 +14,8 @@
     <string name="units">Units (Gallons, Cups, etc.)</string>
     <string name="eventDate">Event Date</string>
     <string name="title_activity_maps">Map</string>
+    <string name="confirm_delete">Confirm Delete</string>
+    <string name="delete_confirmation_message">Are you sure you want to delete this item?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

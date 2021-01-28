@@ -1,7 +1,9 @@
 package edu.uc.jonesbr.myplantdiary.ui.main
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.ImageDecoder
@@ -202,7 +204,19 @@ open class DiaryFragment : Fragment() {
      }
 
     private fun deleteEvent(event: Event) {
-        viewModel.delete(event)
+        var builder = AlertDialog.Builder(activity)
+        builder.setTitle(getString(R.string.confirm_delete))
+        builder.setMessage(getString(R.string.delete_confirmation_message))
+        builder.setPositiveButton(getString(R.string.yes), DialogInterface.OnClickListener { dialog, id ->
+            viewModel.delete(event)
+            dialog.cancel()
+        })
+        builder.setNegativeButton(getString(R.string.no), DialogInterface.OnClickListener { dialog, id ->
+            dialog.cancel()
+        })
+        var alert = builder.create()
+        alert.show()
+
     }
 
 
