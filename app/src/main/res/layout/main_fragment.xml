@@ -75,12 +75,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actPlantName" />
 
-    <EditText
-        android:id="@+id/txtDatePlanted"
+    <Button
+        android:id="@+id/btnDatePlanted"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/datePlanted"
+        android:text="@string/datePlanted"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/txtDatePlanted"
+        app:layout_constraintTop_toBottomOf="@+id/btnDatePlanted"
         tools:layout_editor_absoluteX="1dp">
 
         <ImageButton

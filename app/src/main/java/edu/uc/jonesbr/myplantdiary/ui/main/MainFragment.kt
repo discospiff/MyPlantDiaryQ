@@ -2,6 +2,9 @@ package edu.uc.jonesbr.myplantdiary.ui.main
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -9,13 +12,16 @@ import android.graphics.ImageDecoder
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.DatePicker
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,9 +36,10 @@ import edu.uc.jonesbr.myplantdiary.dto.Photo
 import edu.uc.jonesbr.myplantdiary.dto.Plant
 import edu.uc.jonesbr.myplantdiary.dto.Specimen
 import kotlinx.android.synthetic.main.main_fragment.*
+import java.text.SimpleDateFormat
 import java.util.*
 
-class MainFragment : DiaryFragment() {
+class MainFragment : DiaryFragment(), DateSelected {
 
     private val IMAGE_GALLERY_REQUEST_CODE: Int = 2001
     private val LOCATION_PERMISSION_REQUEST_CODE = 2000
@@ -81,6 +88,9 @@ class MainFragment : DiaryFragment() {
         btnForward.setOnClickListener {
             (activity as MainActivity).onLeftSwipe()
         }
+        btnDatePlanted.setOnClickListener {
+            showDatePicker()
+        }
         spnSpecimens.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             /**
              * Callback method to be invoked when the selection disappears from this
@@ -118,7 +128,7 @@ class MainFragment : DiaryFragment() {
                 // use this specimen object to populate our UI fields
                 actPlantName.setText(specimen.plantName)
                 txtDescription.setText(specimen.description)
-                txtDatePlanted.setText(specimen.datePlanted)
+                btnDatePlanted.setText(specimen.datePlanted)
                 viewModel.specimen = specimen
                 // trigger an update of the events for this specimen.
                 viewModel.fetchEvents()
@@ -140,6 +150,12 @@ class MainFragment : DiaryFragment() {
             // tell the recycler view to update.
             rcyEventsForSpecimens.adapter!!.notifyDataSetChanged()
         })
+
+    }
+
+    private fun showDatePicker() {
+        val datePickerFragment = DatePickerFragment(this)
+        datePickerFragment.show(fragmentManager!!, "datePicker")
 
     }
 
@@ -174,7 +190,7 @@ class MainFragment : DiaryFragment() {
             longitude = lblLongitudeValue.text.toString()
             plantName = actPlantName.text.toString()
             description = txtDescription.text.toString()
-            datePlanted = txtDatePlanted.text.toString()
+            datePlanted = btnDatePlanted.text.toString()
             plantId = _plantId
         }
         viewModel.specimen = specimen
@@ -245,8 +261,42 @@ class MainFragment : DiaryFragment() {
         }
     }
 
+    class DatePickerFragment(val dateSelected : DateSelected) : DialogFragment(), DatePickerDialog.OnDateSetListener {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month  = calendar.get(Calendar.MONTH)
+            val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+            return DatePickerDialog(context!!, this, year, month, dayOfMonth)
+        }
+
+        override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+            dateSelected.receiveDate(year, month, dayOfMonth)
+            Log.d(TAG, "Got the date")
+
+        }
+    }
+
     companion object {
         fun newInstance() = MainFragment()
     }
 
+    /**
+     * This is the function that will be invoked in our fragment when a user picks a date.
+     */
+    override fun receiveDate(year: Int, month: Int, dayOfMonth: Int) {
+        val calendar = GregorianCalendar()
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        calendar.set(Calendar.MONTH, month)
+        calendar.set(Calendar.YEAR, year)
+
+        val viewFormatter = SimpleDateFormat("dd-MMM-YYYY")
+        var viewFormattedDate = viewFormatter.format(calendar.getTime())
+        btnDatePlanted.setText(viewFormattedDate)
+    }
+
+}
+
+interface DateSelected {
+    fun receiveDate(year: Int, month: Int, dayOfMonth: Int)
 }
