@@ -18,4 +18,9 @@
     <string name="delete_confirmation_message">Are you sure you want to delete this item?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="common_name">Common Name</string>
+    <string name="genus">Genus</string>
+    <string name="species">Species</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -15,4 +15,7 @@ interface ILocalPlantDAO {
 
     @Delete
     fun delete(plant: Plant)
+
+    @Insert
+    fun save(plant: Plant)
 }

@@ -2,9 +2,11 @@ package edu.uc.jonesbr.myplantdiary.ui.main
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.ContentValues.TAG
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -16,10 +18,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.DatePicker
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
@@ -36,10 +35,11 @@ import edu.uc.jonesbr.myplantdiary.dto.Photo
 import edu.uc.jonesbr.myplantdiary.dto.Plant
 import edu.uc.jonesbr.myplantdiary.dto.Specimen
 import kotlinx.android.synthetic.main.main_fragment.*
+import java.lang.IllegalStateException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainFragment : DiaryFragment(), DateSelected {
+class MainFragment : DiaryFragment(), DateSelected, NewPlantCreated {
 
     private val IMAGE_GALLERY_REQUEST_CODE: Int = 2001
     private val LOCATION_PERMISSION_REQUEST_CODE = 2000
@@ -50,6 +50,7 @@ class MainFragment : DiaryFragment(), DateSelected {
     private var photos : ArrayList<Photo> = ArrayList<Photo>()
     private var specimen = Specimen()
     private var _events = ArrayList<Event>()
+    var selectedPlant: Plant = Plant("", "", "")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,9 +69,35 @@ class MainFragment : DiaryFragment(), DateSelected {
         viewModel.specimens.observe(this, Observer {
             specimens -> spnSpecimens.setAdapter(ArrayAdapter(context!!, R.layout.support_simple_spinner_dropdown_item, specimens))
         })
+        /**
+         * An existing item was clicked from the predefined autocomplete list.
+         */
         actPlantName.setOnItemClickListener { parent, view, position, id ->
-            var selectedPlant = parent.getItemAtPosition(position) as Plant
+            selectedPlant = parent.getItemAtPosition(position) as Plant
             _plantId = selectedPlant.plantId
+        }
+        actPlantName.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                selectedPlant = Plant("", "", "")
+            }
+
+            /**
+             * An existing item was clicked from the predefined autocomplete list.
+             */
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                selectedPlant = parent!!.getItemAtPosition(position) as Plant
+                _plantId = selectedPlant.plantId
+            }
+        }
+        actPlantName.setOnFocusChangeListener { view, hasFocus ->
+            var enteredPlant = actPlantName.text.toString()
+            if (selectedPlant != null && enteredPlant.isNotEmpty() && !enteredPlant.equals(selectedPlant.toString())) {
+                // we have a new plant.
+                // we want to ask the user to create a new entry.
+                val newPlantDialogFragment = NewPlantDialogFragment(enteredPlant, this)
+                newPlantDialogFragment.show(fragmentManager!!, "New Plant")
+            }
+
         }
         btnMap.setOnClickListener {
             (activity as MainActivity).onOpenMap()
@@ -295,8 +322,43 @@ class MainFragment : DiaryFragment(), DateSelected {
         btnDatePlanted.setText(viewFormattedDate)
     }
 
+    class NewPlantDialogFragment(val enteredPlant:String, val newPlantCreated:NewPlantCreated) : DialogFragment() {
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            return activity?.let {
+                val builder = AlertDialog.Builder(it)
+                val inflater = requireActivity().layoutInflater
+                var newPlantView = inflater.inflate(R.layout.newplantdialog, null)
+                val txtCommon = newPlantView.findViewById<EditText>(R.id.edtCommon)
+                val txtGenus = newPlantView.findViewById<EditText>(R.id.edtGenus)
+                val txtSpecies = newPlantView.findViewById<EditText>(R.id.edtSpecies)
+                txtCommon.setText(enteredPlant)
+                builder.setView(newPlantView)
+                        .setPositiveButton(getString(R.string.save), DialogInterface.OnClickListener{ dialog, which ->
+                            val common = txtCommon.text.toString()
+                            val genus = txtGenus.text.toString()
+                            val species = txtSpecies.text.toString()
+                            val newPlant = Plant(genus, species, common)
+                            newPlantCreated.receivePlant(newPlant)
+                            getDialog()?.cancel()
+                        })
+                        .setNegativeButton(getString(R.string.cancel), DialogInterface.OnClickListener { dialog, which ->
+                            getDialog()?.cancel()
+                        })
+                builder.create()
+            } ?: throw IllegalStateException("Activity cannot be null")
+        }
+    }
+
+    override fun receivePlant(plant: Plant) {
+       // applicationViewModel.plantService.save(plant)
+    }
+
 }
 
 interface DateSelected {
     fun receiveDate(year: Int, month: Int, dayOfMonth: Int)
+}
+
+interface NewPlantCreated {
+    fun receivePlant(plant: Plant)
 }

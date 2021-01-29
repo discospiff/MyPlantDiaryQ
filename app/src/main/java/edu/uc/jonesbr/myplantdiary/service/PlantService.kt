@@ -48,4 +48,8 @@ class PlantService(application: Application) {
         val localPlantDAO = db.localPlantDAO()
         return localPlantDAO
     }
+
+    internal fun save(plant:Plant) {
+        getLocalPlantDAO().save(plant)
+    }
 }
