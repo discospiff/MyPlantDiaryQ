@@ -157,7 +157,7 @@ class MainViewModel : ViewModel() {
 
             }
             uploadTask.addOnFailureListener {
-                Log.e(TAG, it.message)
+                Log.e(TAG, it.message ?: "NO message")
             }
         }
     }

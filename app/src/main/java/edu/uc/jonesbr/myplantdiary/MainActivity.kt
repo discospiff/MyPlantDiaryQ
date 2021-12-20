@@ -14,6 +14,7 @@ import edu.uc.jonesbr.myplantdiary.ui.main.DiaryMapFragment
 import edu.uc.jonesbr.myplantdiary.ui.main.EventFragment
 import edu.uc.jonesbr.myplantdiary.ui.main.MainFragment
 import edu.uc.jonesbr.myplantdiary.ui.main.MainViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,13 +23,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainFragment: MainFragment
     private lateinit var activeFragment: Fragment
 
+    private val viewModel : MainViewModel by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         eventFragment = EventFragment.newInstance()
         mainFragment = MainFragment.newInstance()
-        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        // val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, mainFragment)

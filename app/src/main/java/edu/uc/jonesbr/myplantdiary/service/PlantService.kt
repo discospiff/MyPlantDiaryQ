@@ -38,7 +38,7 @@ class PlantService(application: Application) {
             var localPlantDAO = getLocalPlantDAO()
             localPlantDAO.insertAll(plants!!)
         }catch (e: Exception) {
-            Log.e(TAG, e.message)
+            Log.e(TAG, e.message ?: "No message")
         }
 
     }

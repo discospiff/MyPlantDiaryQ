@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import edu.uc.jonesbr.myplantdiary.R
 import edu.uc.jonesbr.myplantdiary.dto.Event
 import kotlinx.android.synthetic.main.rowlayout.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,13 +38,14 @@ open class DiaryFragment : Fragment() {
     protected val CAMERA_PERMISSION_REQUEST_CODE = 1997
     private lateinit var currentPhotoPath: String
     protected var photoURI : Uri? = null
-    internal lateinit var viewModel: MainViewModel
+    // internal lateinit var viewModel: MainViewModel
+    protected val viewModel : MainViewModel by viewModel<MainViewModel>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity.let {
-            viewModel = ViewModelProviders.of(it!!).get(MainViewModel::class.java)
-        }
+//        activity.let {
+//            viewModel = ViewModelProviders.of(it!!).get(MainViewModel::class.java)
+//        }
     }
 
     /**
